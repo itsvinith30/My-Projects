@@ -1,0 +1,10 @@
+Sensitive configuration files
+This file contains your database password and should NEVER be committed to GitHub.
+db_connect.php
+
+Operating System files
+.DS_Store
+Thumbs.db
+
+Log files
+*.log
