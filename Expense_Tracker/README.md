@@ -39,7 +39,7 @@ Follow these steps to set up the project locally.
 1. Prerequisites
 A local server environment like XAMPP or WAMP.
 
-MySQL database.
+MySQL database and a management tool like phpMyAdmin, the MySQL command line, or MySQL Workbench.
 
 Git (for version control).
 
@@ -48,16 +48,65 @@ git clone [https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git](https://gi
 cd YOUR_REPOSITORY_NAME
 
 3. Database Setup
-Start your Apache and MySQL services in XAMPP.
+You can set up the database using a graphical tool like phpMyAdmin, MySQL Workbench, or the command line.
 
-Open your database management tool (like phpMyAdmin).
+Option A: Using phpMyAdmin (Recommended for XAMPP)
+Start Services: Open your XAMPP Control Panel and start the "Apache" and "MySQL" modules.
 
-Create a new database named expense_tracker.
+Open phpMyAdmin: Click the "Admin" button next to MySQL to open phpMyAdmin in your browser.
 
-Import the setup.sql file provided in this repository into the expense_tracker database. This will create all the necessary tables.
+Create Database:
+
+Click on the "Databases" tab at the top.
+
+Under "Create database", enter expense_tracker in the input field.
+
+Choose a collation like utf8mb4_unicode_ci (or leave the default) and click "Create".
+
+Import SQL File:
+
+Click on the newly created expense_tracker database in the left sidebar.
+
+Click on the "Import" tab at the top.
+
+Under "File to import", click "Choose File" and navigate to the project folder to select the setup.sql file.
+
+Scroll to the bottom and click "Go". This will execute the script and create all the necessary tables.
+
+Option B: Using the Command Line
+Open Terminal: Open your command prompt or terminal.
+
+Log in to MySQL: Connect to the MySQL server (you may be prompted for your password).
+
+mysql -u root -p
+
+Create the Database: Run the following command inside the MySQL prompt:
+
+CREATE DATABASE expense_tracker;
+
+Select the Database:
+
+USE expense_tracker;
+
+Import the SQL Script: Run the source command, replacing path/to/setup.sql with the actual full path to the setup.sql file on your computer.
+
+source path/to/setup.sql;
+
+Exit MySQL:
+
+exit;
+
+Option C: Using MySQL Workbench
+Connect to Database: Open MySQL Workbench and connect to your local database instance (e.g., "Local instance 3306").
+
+Open SQL Script: In the top menu, go to File -> Open SQL Script.... Navigate to your project folder and select the setup.sql file.
+
+Execute Script: The script's content will open in a new query tab. To run the entire script, click the first lightning bolt icon (⚡) in the toolbar (the one without a cursor on it).
+
+Verify: In the "SCHEMAS" panel on the left, click the refresh icon. You should now see the expense_tracker database with all its tables.
 
 4. Configure Database Connection
-Open the db_connect.php file.
+Open the db_connect.php file in your code editor.
 
 Update the $servername, $username, $password, and $dbname variables with your local database credentials.
 
