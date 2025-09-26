@@ -1,0 +1,14 @@
+<?php
+// config.php
+// Email configuration settings
+
+define('SMTP_HOST', 'smtp.example.com');
+define('SMTP_USERNAME', 'your_email@example.com');
+define('SMTP_PASSWORD', 'your_app_password');
+define('SMTP_PORT', 587); // Port for TLS
+define('SMTP_SECURE', 'tls'); // Encryption type
+
+// Email from address and name
+define('EMAIL_FROM', 'avinithkumar2004@gmail.com');
+define('EMAIL_FROM_NAME', 'Attendance Tracker');
+?>

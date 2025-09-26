@@ -1,0 +1,616 @@
+/* style.css */
+
+/* --- THEME COLOR VARIABLES --- */
+:root {
+    /* Light Theme (Default) */
+    --bg-color: #f8f9fa;
+    --card-bg-color: #ffffff;
+    --text-color: #212529;
+    --muted-text-color: #6c757d;
+    --border-color: #dee2e6;
+    
+    --navbar-bg-color: #ffffff;
+    --navbar-text-color: #495057;
+    --navbar-brand-color: #007bff;
+    
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --danger-color: #dc3545;
+    --danger-hover-color: #c82333;
+    --success-color: #28a745;
+    --success-hover-color: #218838;
+    --secondary-color: #6c757d; /* Added for edit button */
+    --secondary-hover-color: #5a6268; /* Added for edit button */
+    
+    --table-border-color: #dee2e6;
+    --table-header-bg: #e9ecef;
+    --table-row-alt-bg: #f8f9fa;
+    --table-row-hover-bg: #e9ecef;
+
+    --alert-success-bg: #d4edda;
+    --alert-success-text: #155724;
+    --alert-danger-bg: #f8d7da;
+    --alert-danger-text: #721c24;
+
+    --theme-toggle-icon: #495057;
+    --dropdown-bg: #ffffff;
+}
+
+html.dark-mode {
+    /* Dark Theme */
+    --bg-color: #121212;
+    --card-bg-color: #1e1e1e;
+    --text-color: #e8e6e3;
+    --muted-text-color: #adb5bd;
+    --border-color: #495057;
+
+    --navbar-bg-color: #1e1e1e;
+    --navbar-text-color: #ced4da;
+    --navbar-brand-color: #58a6ff;
+
+    --primary-color: #58a6ff;
+    --primary-hover-color: #79b8ff;
+    --danger-color: #f85149;
+    --danger-hover-color: #ff6a6a;
+    --success-color: #56d364;
+    --success-hover-color: #6ef07c;
+    --secondary-color: #8b949e; /* Added for edit button */
+    --secondary-hover-color: #a1aab4; /* Added for edit button */
+
+    --table-border-color: #343a40;
+    --table-header-bg: #212529;
+    --table-row-alt-bg: #212529;
+    --table-row-hover-bg: #343a40;
+
+    --alert-success-bg: #1c3d2f;
+    --alert-success-text: #56d364;
+    --alert-danger-bg: #441e22;
+    --alert-danger-text: #f85149;
+
+    --theme-toggle-icon: #ced4da;
+    --dropdown-bg: #2c2c2c;
+}
+/* --- END OF THEME VARIABLES --- */
+
+
+/* General Body Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--card-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: var(--navbar-bg-color);
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s, border-color 0.3s;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin: 0 auto;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    flex-wrap: wrap; /* Allow wrapping for mobile */
+}
+
+.navbar-brand {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--navbar-brand-color);
+    text-decoration: none;
+    margin-right: auto; /* Push other items to the right */
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+}
+
+/* This targets ONLY the main navigation UL, not the dropdowns */
+.navbar nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar nav ul li {
+    position: relative; /* Needed for dropdown positioning */
+}
+
+.navbar nav ul li a {
+    color: var(--navbar-text-color);
+    text-decoration: none;
+    padding: 8px 12px;
+    margin: 0 4px;
+    display: block;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+    font-weight: 500;
+}
+
+.navbar nav ul li a:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.navbar nav ul li a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+html.dark-mode .navbar nav ul li a.active {
+    color: #121212; /* Dark text on bright button */
+}
+
+/* Right-aligned items */
+li.right-align {
+    margin-left: auto;
+}
+
+/* --- Dropdown Menu Styles --- */
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--dropdown-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 180px;
+    z-index: 1001;
+    list-style: none;
+    padding: 5px 0;
+    margin-top: 5px;
+}
+
+.dropdown-menu.show {
+    display: block; /* Show when toggled */
+}
+
+.dropdown-menu li {
+    width: 100%;
+}
+
+.dropdown-menu li a {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 0;
+}
+
+.dropdown-menu li a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+html.dark-mode .dropdown-menu li a:hover {
+    color: #121212;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--theme-toggle-icon);
+}
+.theme-toggle .moon-icon { display: none; }
+.theme-toggle .sun-icon { display: block; }
+
+html.dark-mode .theme-toggle .moon-icon { display: block; }
+html.dark-mode .theme-toggle .sun-icon { display: none; }
+
+
+/* Hamburger Menu Toggle */
+.menu-toggle {
+    display: none; /* Hidden on desktop */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+/* Main Content Styles */
+.main-content {
+    padding-top: 20px;
+}
+
+h2, h3, h4 {
+    color: var(--text-color);
+}
+
+p {
+    color: var(--muted-text-color);
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 30px 0;
+}
+
+
+/* Login Page Specific Styles */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    background: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    color: var(--primary-color);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea,
+.search-container input[type="text"] { /* Added search input here */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box; /* Important */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+html.dark-mode .btn {
+    color: #121212;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.btn-danger, .btn-sm.btn-danger {
+    background-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover-color);
+}
+
+.btn-success, .btn-sm.btn-success {
+    background-color: var(--success-color);
+}
+
+.btn-success:hover {
+    background-color: var(--success-hover-color);
+}
+
+.btn-edit { 
+    background-color: var(--secondary-color); 
+    color: white; 
+    text-decoration: none; 
+}
+.btn-edit:hover { 
+    background-color: var(--secondary-hover-color); 
+}
+
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    width: auto;
+}
+
+
+/* Alert/Message Styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: var(--alert-success-text);
+    background-color: var(--alert-success-bg);
+    border-color: var(--alert-success-text);
+}
+
+.alert-danger {
+    color: var(--alert-danger-text);
+    background-color: var(--alert-danger-bg);
+    border-color: var(--alert-danger-text);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid var(--table-border-color);
+    padding: 12px;
+    text-align: left;
+    color: var(--text-color);
+}
+
+table th {
+    background-color: var(--table-header-bg);
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: var(--table-row-alt-bg);
+}
+
+table tr:hover {
+    background-color: var(--table-row-hover-bg);
+}
+
+/* --- NEW STYLES FOR TABLE INPUTS --- */
+table td select,
+table td input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: border-color 0.2s;
+}
+table td select:focus,
+table td input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+/* --- END OF NEW STYLES --- */
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+.action-buttons .btn, .action-buttons a.btn {
+    width: auto;
+    display: inline-block;
+}
+
+
+/* Dashboard Chart Styles */
+.charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-card {
+    flex: 1;
+    min-width: 300px;
+    background: var(--card-bg-color);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    height: 400px; /* Fixed height for charts */
+}
+
+/* Search Form Styles */
+.search-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+.search-container input[type="text"] {
+    flex-grow: 1;
+}
+.search-container .btn {
+    width: auto;
+}
+
+/* Status Badge Styles (for leave requests) */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+.status-pending { background-color: #ffc107; color: #333; }
+.status-approved { background-color: #28a745; }
+.status-denied { background-color: #dc3545; }
+
+
+/* Two-column form layout */
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.form-card {
+    flex: 1;
+    min-width: 300px;
+    background-color: var(--card-bg-color);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* Attendance Status Text Styles */
+.status-text-Present {
+    color: #28a745;
+    font-weight: bold;
+}
+.status-text-Absent {
+    color: #dc3545;
+    font-weight: bold;
+}
+.status-text-Late {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+/* ------------------------- */
+/* --- RESPONSIVE STYLES --- */
+/* ------------------------- */
+
+/* For tablets and mobile phones */
+@media (max-width: 992px) {
+    .navbar .container {
+        justify-content: space-between;
+    }
+    .navbar-brand {
+        margin-right: 0;
+    }
+
+    /* Mobile Navigation */
+    .menu-toggle {
+        display: block; /* Show hamburger menu */
+        order: 3; /* Move to the end */
+    }
+
+    #main-nav {
+        order: 4; /* Move nav below everything */
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #main-nav > ul {
+        display: none; /* Hide nav links by default */
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    #main-nav ul.show {
+        display: flex; /* Show nav links when toggled */
+    }
+    
+    #main-nav ul li, li.right-align {
+        text-align: left;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #main-nav ul li a {
+        border-bottom: 1px solid var(--border-color);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dropdown-menu {
+        position: static;
+        display: none;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        background-color: transparent;
+        padding-left: 20px; /* Indent dropdown items */
+    }
+    .dropdown-menu.show {
+        display: block;
+    }
+    
+    /* Adjust main container padding */
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    /* Stack form columns vertically */
+    .form-container {
+        flex-direction: column;
+    }
+    
+    /* Make tables horizontally scrollable */
+    .main-content table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    /* Adjust login form for smaller screens */
+    .login-container {
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    /* Adjust chart heights */
+    .chart-card {
+        height: 300px;
+    }
+}
+

@@ -1,0 +1,161 @@
+## Database Setup Commands
+
+```sql
+CREATE DATABASE IF NOT EXISTS `attendance_system`;
+USE `attendance_system`;
+DROP TABLE IF EXISTS `attendance_records`;
+CREATE TABLE `attendance_records` (...);
+LOCK TABLES `attendance_records` WRITE;
+INSERT INTO `attendance_records` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `audit_logs`;
+CREATE TABLE `audit_logs` (...);
+LOCK TABLES `audit_logs` WRITE;
+INSERT INTO `audit_logs` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `classes`;
+CREATE TABLE `classes` (...);
+LOCK TABLES `classes` WRITE;
+INSERT INTO `classes` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `leave_requests`;
+CREATE TABLE `leave_requests` (...);
+LOCK TABLES `leave_requests` WRITE;
+INSERT INTO `leave_requests` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `parent_student_link`;
+CREATE TABLE `parent_student_link` (...);
+DROP TABLE IF EXISTS `parents`;
+CREATE TABLE `parents` (...);
+DROP TABLE IF EXISTS `settings`;
+CREATE TABLE `settings` (...);
+LOCK TABLES `settings` WRITE;
+INSERT INTO `settings` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `students`;
+CREATE TABLE `students` (...);
+LOCK TABLES `students` WRITE;
+INSERT INTO `students` VALUES (...);
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (...);
+LOCK TABLES `users` WRITE;
+INSERT INTO `users` VALUES (...);
+UNLOCK TABLES;
+```
+
+-----
+
+## Application Commands (from PHP files)
+
+These are the operational queries executed by the application code. Placeholders like `[...]` are used to denote variables.
+
+### `audit_helper.php`
+
+  * `INSERT INTO audit_logs (user_id, user_role, action_type, log_message, ip_address) VALUES ([...])`
+
+### `audit_logs.php`
+
+  * `SELECT log_id, user_id, user_role, action_type, log_message, ip_address, created_at FROM audit_logs ORDER BY created_at DESC`
+
+### `edit_class.php`
+
+  * `UPDATE classes SET class_name = [...], section = [...], teacher_id = [...] WHERE class_id = [...]`
+  * `SELECT class_id, class_name, section, teacher_id FROM classes WHERE class_id = [...]`
+  * `SELECT user_id, name FROM users WHERE role = 'teacher' ORDER BY name`
+
+### `edit_student.php`
+
+  * `UPDATE students SET name = [...], roll_number = [...], class_id = [...], email = [...], password_hash = [...] WHERE student_id = [...]`
+  * `SELECT student_id, name, roll_number, class_id, email FROM students WHERE student_id = [...]`
+  * `SELECT class_id, class_name, section FROM classes ORDER BY class_name, section`
+
+### `edit_teacher.php`
+
+  * `UPDATE users SET name = [...], email = [...], password_hash = [...] WHERE user_id = [...] AND role = 'teacher'`
+  * `SELECT user_id, name, email FROM users WHERE user_id = [...] AND role = 'teacher'`
+
+### `export_csv.php`
+
+  * `SELECT s.name as student_name, ar.date, ar.status, ar.remarks FROM attendance_records ar JOIN students s ON ar.student_id = s.student_id WHERE ar.class_id = [...] AND ar.date BETWEEN [...] AND [...] ORDER BY ar.date DESC, s.name ASC`
+
+### `index.php`
+
+  * `SELECT status, COUNT(record_id) as count FROM attendance_records WHERE date = [...] GROUP BY status`
+  * `SELECT c.class_name, COUNT(ar.record_id) AS total_records, SUM(CASE WHEN ar.status = 'Present' THEN 1 ELSE 0 END) AS present_count FROM classes c LEFT JOIN attendance_records ar ON c.class_id = ar.class_id AND ar.date BETWEEN [...] AND [...] GROUP BY c.class_id ORDER BY c.class_name`
+
+### `login.php`
+
+  * `SELECT user_id, name, email, password_hash, role FROM users WHERE email = [...]`
+  * `SELECT student_id, name, email, password_hash FROM students WHERE email = [...]`
+  * `SELECT parent_id, name, email, password_hash FROM parents WHERE email = [...]`
+
+### `manage_classes.php`
+
+  * `INSERT INTO classes (class_name, section, teacher_id) VALUES ([...])`
+  * `DELETE FROM classes WHERE class_id = [...]`
+  * `SELECT c.class_id, c.class_name, c.section, u.name as teacher_name FROM classes c LEFT JOIN users u ON c.teacher_id = u.user_id WHERE [...]`
+
+### `manage_leave.php`
+
+  * `UPDATE leave_requests SET status = [...] WHERE request_id = [...]`
+  * `SELECT s.name as student_name, s.email as student_email, lr.date_from, lr.date_to FROM leave_requests lr JOIN students s ON lr.student_id = s.student_id WHERE lr.request_id = [...]`
+  * `SELECT lr.request_id, s.name as student_name, c.class_name, c.section, lr.date_from, lr.date_to, lr.reason, lr.status FROM leave_requests lr JOIN students s ON lr.student_id = s.student_id LEFT JOIN classes c ON s.class_id = c.class_id ORDER BY lr.created_at DESC`
+
+### `manage_parents.php`
+
+  * `INSERT INTO parents (name, email, password_hash) VALUES ([...])`
+  * `INSERT INTO parent_student_link (parent_id, student_id) VALUES ([...])`
+  * `SELECT parent_id, name, email FROM parents ORDER BY name`
+  * `SELECT student_id, name FROM students ORDER BY name`
+  * `SELECT p.name as parent_name, s.name as student_name FROM parent_student_link psl JOIN parents p ON psl.parent_id = p.parent_id JOIN students s ON psl.student_id = s.student_id ORDER BY p.name, s.name`
+
+### `manage_students.php`
+
+  * `INSERT INTO students (name, roll_number, class_id, email, password_hash) VALUES ([...])`
+  * `DELETE FROM students WHERE student_id = [...]`
+  * `SELECT s.student_id, s.name, s.roll_number, c.class_name, c.section FROM students s LEFT JOIN classes c ON s.class_id = c.class_id WHERE [...]`
+
+### `manage_teachers.php`
+
+  * `INSERT INTO users (name, email, password_hash, role) VALUES ([...], 'teacher')`
+  * `DELETE FROM users WHERE user_id = [...] AND role = 'teacher'`
+  * `SELECT user_id, name, email FROM users WHERE role = 'teacher' AND [...]`
+
+### `parent_dashboard.php`
+
+  * `SELECT s.student_id, s.name FROM students s JOIN parent_student_link psl ON s.student_id = psl.student_id WHERE psl.parent_id = [...]`
+  * `SELECT ar.date, ar.status, ar.remarks, c.class_name, c.section FROM attendance_records ar JOIN classes c ON ar.class_id = c.class_id WHERE ar.student_id = [...] ORDER BY ar.date DESC`
+
+### `profile.php`
+
+  * `SELECT password_hash FROM [...] WHERE [...] = [...]`
+  * `UPDATE [...] SET password_hash = [...] WHERE [...] = [...]`
+
+### `settings.php`
+
+  * `UPDATE settings SET setting_value = [...] WHERE setting_key = [...]`
+  * `SELECT setting_key, setting_value FROM settings`
+
+### `student_dashboard.php`
+
+  * `INSERT INTO leave_requests (student_id, date_from, date_to, reason) VALUES ([...])`
+  * `SELECT date, status FROM attendance_records WHERE student_id = [...] ORDER BY date DESC`
+  * `SELECT date_from, date_to, reason, status FROM leave_requests WHERE student_id = [...] ORDER BY created_at DESC`
+
+### `system_helpers.php`
+
+  * `SELECT setting_key, setting_value FROM settings`
+
+### `take_attendance.php`
+
+  * `SELECT record_id FROM attendance_records WHERE student_id = [...] AND date = [...]`
+  * `UPDATE attendance_records SET status = [...], remarks = [...] WHERE record_id = [...]`
+  * `INSERT INTO attendance_records (student_id, class_id, date, status, remarks) VALUES ([...])`
+  * `SELECT email, name FROM students WHERE student_id = [...] AND email IS NOT NULL AND email != ''`
+  * `SELECT s.student_id, s.name, s.roll_number, ar.status, ar.remarks FROM students s LEFT JOIN attendance_records ar ON s.student_id = ar.student_id AND ar.date = [...] WHERE s.class_id = [...] ORDER BY s.roll_number, s.name`
+
+### `view_reports.php`
+
+  * `SELECT class_id, class_name, section FROM classes WHERE [...]`
+  * `SELECT ar.date, s.name as student_name, s.roll_number, ar.status, ar.remarks FROM attendance_records ar JOIN students s ON ar.student_id = s.student_id WHERE ar.class_id = [...] AND ar.date BETWEEN [...] AND [...] ORDER BY ar.date, s.name`

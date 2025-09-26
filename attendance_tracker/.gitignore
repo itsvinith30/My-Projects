@@ -1,0 +1,6 @@
+# Ignore configuration files with sensitive credentials
+config.php
+db_connect.php
+
+# Ignore vendor folders if you use a dependency manager like Composer
+/vendor/
